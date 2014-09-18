@@ -1,4 +1,4 @@
-/*! angular-lazyload - v0.4.0 - https://github.com/atian25/angular-lazyload - 2014-09-18 */
+/*! angular-lazyload - v0.4.0 - https://github.com/atian25/angular-lazyload - 2013-10-28 */
 /**
  * A lazyload service for angular projects, only load-on-demand, support seajs/requirejs/custom.
  * support [Sea.js](http://seajs.org/) & [RequireJS](http://requirejs.org/‎)
@@ -111,7 +111,7 @@
   LazyLoadProvider.prototype.loaders['requirejs'] = {
     check: function(route){
       //if exsit `controllerUrl` then trigger requirejs async load.
-      return Object.prototype.toString.call(route.controllerUrl) == '[object Array]';
+      return typeof route.controllerUrl == 'string'
     },
     load: function(route, suc, fail){
       require(route.controllerUrl, function(m){

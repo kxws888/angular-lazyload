@@ -110,7 +110,7 @@
   LazyLoadProvider.prototype.loaders['requirejs'] = {
     check: function(route){
       //if exsit `controllerUrl` then trigger requirejs async load.
-      return typeof route.controllerUrl == 'string'
+      return Object.prototype.toString.call(route.controllerUrl) == '[object Array]';
     },
     load: function(route, suc, fail){
       require(route.controllerUrl, function(m){

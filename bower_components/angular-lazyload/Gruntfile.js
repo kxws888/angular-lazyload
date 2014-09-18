@@ -25,7 +25,7 @@ module.exports = function (grunt) {
     serverHost: '0.0.0.0',
     serverPort: 9000,
     serverUrl: 'http://localhost:9000/example/src/index.html',
-    livereload: 35728
+    livereload: 35729
   };
 
   //grunt config
@@ -39,24 +39,17 @@ module.exports = function (grunt) {
       options: {
         port: cfg.serverPort,
         hostname: cfg.serverHost,
-        middleware: function(connect, options, middlewares) {
-          var fs = require('fs');
-          var path = require('path');
-          var support = ['POST', 'PUT', 'DELETE'];
-          //middlewares = middlewares || [];
-          middlewares.unshift(function (req, res, next) {
-              // 单独处理POST请求 请求的地址必须是文件 这里没有进行rewrite处理
-              if (support.indexOf(req.method.toUpperCase()) != -1) {
-                  var filepath = path.join(options.base[0], req.url);
-                  if (fs.existsSync(filepath) && fs.statSync(filepath).isFile()) {
-                      return res.end(fs.readFileSync(filepath));
-                  }
-              }
-
-              return next();
-          });
-
-          return middlewares;
+        middleware: function(connect, options) {
+          return [
+            require('connect-livereload')({
+              port: cfg.livereload
+            }),
+            connect.query(),
+            // Serve static files.
+            connect.static(options.base),
+            // Make empty directories browsable.
+            connect.directory(options.base),
+          ];
         }
       },
       server: {
